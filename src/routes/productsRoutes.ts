@@ -37,7 +37,7 @@ productsRouter.post('/', async (req, res) => {
 // Route pour modifier le nom et la description d'un produit
 productsRouter.put('/:id', async (req, res) => {
   const { id } = req.params;
-  const { name, description }: {name: string, description: string} = req.body;
+  const { name, description, price }: {name: string, description: string, price: number} = req.body;
   try {
     const updatedProduct = await prisma.product.update({
       where: {
@@ -46,6 +46,7 @@ productsRouter.put('/:id', async (req, res) => {
       data: {
         name,
         description,
+        price,
       },
     });
     res.json(updatedProduct);

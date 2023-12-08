@@ -6,8 +6,6 @@ import usersRouter from './routes/usersRoutes';
 import ordersRouter from './routes/ordersRoutes';
 import helmet from 'helmet';
 import cors from 'cors';
-import { body } from 'express-validator';
-import { handleValidationErrors } from './middlewares/expressValidatorMiddleware';
 
 const app = express();
 const port = process.env.PORT || 3000;
