@@ -4,10 +4,13 @@ import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 import { body } from 'express-validator';
 import { handleValidationErrors } from '../middlewares/expressValidatorMiddleware';
+import roleMiddleware from '../middlewares/roleMiddleware';
 
 const prisma = new PrismaClient();
 
 const usersRouter = Router();
+
+const requireAdmin = roleMiddleware('admin');
 
 // Route pour récupérer tous les utilisateurs
 usersRouter.get('/', async (req, res) => {
@@ -28,7 +31,7 @@ usersRouter.post(
   handleValidationErrors,
   async (req, res) => {
   try {
-    const { firstName, lastName, email, password }: {firstName: string, lastName: string, email: string, password: string} = req.body;
+    const { firstName, lastName, email, password, role }: {firstName: string, lastName: string, email: string, password: string, role: string} = req.body;
 
     // Validation des données d'entrée
     if (!firstName || !lastName || !email || !password) {
@@ -44,6 +47,7 @@ usersRouter.post(
         lastName,
         email,
         passwordHash,
+        role,
       },
     });
     res.json(newUser);
@@ -93,6 +97,7 @@ usersRouter.post(
         {
             sub: user.id,
             email: user.email,
+            role: user.role,
         },
         process.env.JWT_SECRET as string,
         { expiresIn: '1h' }
@@ -135,7 +140,10 @@ usersRouter.put('/:id', async (req, res) => {
 });
 
 // Route pour supprimer un utilisateur
-usersRouter.delete('/:id', async (req, res) => {
+usersRouter.delete(
+  '/:id', 
+  requireAdmin,
+  async (req, res) => {
   try {
     const { id } = req.params;
 
