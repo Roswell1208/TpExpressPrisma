@@ -1,0 +1,22 @@
+<!-- views/order.ejs -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Liste des commandes</title>
+</head>
+<body>
+  <h1>Liste des commandes</h1>
+  <!-- Affiche la liste des commandes récupérée depuis l'API -->
+  <% orders.forEach(order => { %>
+    <div>
+      <p>Commande ID: <%= order.id %></p>
+      <p>Produit ID: <%= order.productId %></p>
+      <p>Utilisateur ID: <%= order.userId %></p>
+      <p>Quantité: <%= order.quantity %></p>
+    </div>
+    <hr>
+  <% }); %>
+</body>
+</html>
