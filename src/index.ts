@@ -26,7 +26,7 @@ app.use(passportMiddleware);
 
 app.use('/products', productsRouter);
 app.use('/users', usersRouter);
-app.use('/orders', requireAuth, body('email').isEmail().normalizeEmail(), body('password').isLength({ min: 5 }), handleValidationErrors, ordersRouter);
+app.use('/orders', requireAuth, ordersRouter);
 
 app.listen(port, () => {
   console.log(`Server is running at http://localhost:${port}`);

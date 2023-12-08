@@ -21,7 +21,7 @@ usersRouter.get('/', async (req, res) => {
 // Route pour créer un nouvel utilisateur
 usersRouter.post('/signup', async (req, res) => {
   try {
-    const { firstName, lastName, email, password } = req.body;
+    const { firstName, lastName, email, password }: {firstName: string, lastName: string, email: string, password: string} = req.body;
 
     // Validation des données d'entrée
     if (!firstName || !lastName || !email || !password) {
@@ -55,7 +55,7 @@ usersRouter.post('/signup', async (req, res) => {
 // Route pour se connecter
 usersRouter.post('/login', async (req, res) => {
   try {
-    const { email, password } = req.body;
+    const { email, password }: {email: string, password: string} = req.body;
 
     // Validation des données d'entrée
     if (!email || !password) {
@@ -116,7 +116,7 @@ usersRouter.post('/login', async (req, res) => {
 usersRouter.put('/:id', async (req, res) => {
   try {
     const { id } = req.params;
-    const { firstName, lastName } = req.body;
+    const { firstName, lastName }: {firstName: string, lastName: string} = req.body;
 
     const updatedUser = await prisma.user.update({
       where: {
