@@ -6,8 +6,6 @@ import usersRouter from './routes/usersRoutes';
 import ordersRouter from './routes/ordersRoutes';
 import helmet from 'helmet';
 import cors from 'cors';
-import { body } from 'express-validator';
-import { handleValidationErrors } from './middlewares/expressValidatorMiddleware';
 
 const app = express();
 const port = process.env.PORT || 3000;
@@ -26,7 +24,7 @@ app.use(passportMiddleware);
 
 app.use('/products', productsRouter);
 app.use('/users', usersRouter);
-app.use('/orders', requireAuth, body('email').isEmail().normalizeEmail(), body('password').isLength({ min: 5 }), handleValidationErrors, ordersRouter);
+app.use('/orders', requireAuth, ordersRouter);
 
 app.listen(port, () => {
   console.log(`Server is running at http://localhost:${port}`);

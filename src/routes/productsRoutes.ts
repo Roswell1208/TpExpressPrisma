@@ -18,7 +18,7 @@ productsRouter.get('/', async (req, res) => {
 
 // Route pour créer un nouveau produit
 productsRouter.post('/', async (req, res) => {
-  const { name, description, price } = req.body;
+  const { name, description, price }: {name: string, description: string, price: number} = req.body;
   try {
     const newProduct = await prisma.product.create({
       data: {
@@ -37,7 +37,7 @@ productsRouter.post('/', async (req, res) => {
 // Route pour modifier le nom et la description d'un produit
 productsRouter.put('/:id', async (req, res) => {
   const { id } = req.params;
-  const { name, description } = req.body;
+  const { name, description, price }: {name: string, description: string, price: number} = req.body;
   try {
     const updatedProduct = await prisma.product.update({
       where: {
@@ -46,6 +46,7 @@ productsRouter.put('/:id', async (req, res) => {
       data: {
         name,
         description,
+        price,
       },
     });
     res.json(updatedProduct);
@@ -64,7 +65,7 @@ productsRouter.delete('/:id', async (req, res) => {
         id: parseInt(id),
       },
     });
-    res.json(deletedProduct);
+    res.status(204).json(deletedProduct);
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: 'Internal Server Error' });

@@ -2,6 +2,8 @@ import { Router } from 'express';
 import { PrismaClient } from '@prisma/client';
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
+import { body } from 'express-validator';
+import { handleValidationErrors } from '../middlewares/expressValidatorMiddleware';
 
 const prisma = new PrismaClient();
 
@@ -19,19 +21,18 @@ usersRouter.get('/', async (req, res) => {
 });
 
 // Route pour créer un nouvel utilisateur
-usersRouter.post('/signup', async (req, res) => {
+usersRouter.post(
+  '/signup',
+  body('email').isEmail().normalizeEmail(),
+  body('password').isLength({ min: 5 }),
+  handleValidationErrors,
+  async (req, res) => {
   try {
-    const { firstName, lastName, email, password } = req.body;
+    const { firstName, lastName, email, password }: {firstName: string, lastName: string, email: string, password: string} = req.body;
 
     // Validation des données d'entrée
     if (!firstName || !lastName || !email || !password) {
       return res.status(400).json({ error: 'Bad Request - Missing required fields' });
-    }
-
-    // Validation du format de l'email
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!emailRegex.test(email)) {
-      return res.status(400).json({ error: 'Bad Request - Invalid email format' });
     }
 
     // Hashage du mot de passe
@@ -53,19 +54,18 @@ usersRouter.post('/signup', async (req, res) => {
 });
 
 // Route pour se connecter
-usersRouter.post('/login', async (req, res) => {
+usersRouter.post(
+  '/login', 
+  body('email').isEmail().normalizeEmail(),
+  body('password').isLength({ min: 5 }),
+  handleValidationErrors,
+  async (req, res) => {
   try {
-    const { email, password } = req.body;
+    const { email, password }: {email: string, password: string} = req.body;
 
     // Validation des données d'entrée
     if (!email || !password) {
       return res.status(400).json({ error: 'Bad Request - Missing required fields' });
-    }
-
-    // Validation du format de l'email
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!emailRegex.test(email)) {
-      return res.status(400).json({ error: 'Bad Request - Invalid email format' });
     }
 
     // Recherche de l'utilisateur dans la base de données
@@ -116,7 +116,7 @@ usersRouter.post('/login', async (req, res) => {
 usersRouter.put('/:id', async (req, res) => {
   try {
     const { id } = req.params;
-    const { firstName, lastName } = req.body;
+    const { firstName, lastName }: {firstName: string, lastName: string} = req.body;
 
     const updatedUser = await prisma.user.update({
       where: {
