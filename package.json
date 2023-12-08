@@ -8,7 +8,7 @@
     "dev": "nodemon -L -e ts --exec \"npm run build && npm start\"",
     "build": "tsc",
     "test": "echo \"Error: no test specified\" && exit 1",
-    "build:prod": "npm i && tsc"
+    "build:prod": "npm i && tsc && npx prisma migrate deploy"
   },
   "keywords": [],
   "author": "",
